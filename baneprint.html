@@ -1,0 +1,488 @@
+<title>BANEPRINT</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400..700;1,400..700&family=Figtree:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: portada asimétrica con una esfera grande flotando sobre auras difusas; después colección en cuadrícula de fichas técnicas. */
+:root {
+  /* Dark-first: grafito con matiz ciruela */
+  --bg: #1b1920;
+  --surface: #24212b;
+  --surface-2: #2d2935;
+  --fg: #ece5da;
+  --muted: #a39ca6;
+  --line: #3a3542;
+  --accent: #a9bda3;
+  --accent-fg: #1b1920;
+  --aura-a: #7d5a72;
+  --aura-b: #5f7388;
+  --aura-c: #8fa58b;
+  --aura-alpha: 38%;
+  --display: "Bodoni Moda", "Didot", "Bodoni 72", Georgia, serif;
+  --body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #ece6dc;
+    --surface: #f6f2ea;
+    --surface-2: #e3dcd0;
+    --fg: #2a2630;
+    --muted: #6c6570;
+    --line: #cfc7ba;
+    --accent: #4f6b4b;
+    --accent-fg: #f6f2ea;
+    --aura-a: #b48aa6;
+    --aura-b: #8ea3b8;
+    --aura-c: #a9bda3;
+    --aura-alpha: 46%;
+    color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg: #ece6dc;
+  --surface: #f6f2ea;
+  --surface-2: #e3dcd0;
+  --fg: #2a2630;
+  --muted: #6c6570;
+  --line: #cfc7ba;
+  --accent: #4f6b4b;
+  --accent-fg: #f6f2ea;
+  --aura-a: #b48aa6;
+  --aura-b: #8ea3b8;
+  --aura-c: #a9bda3;
+  --aura-alpha: 46%;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, p { margin: 0; }
+h1, h2 { font-family: var(--display); font-weight: 500; text-wrap: balance; line-height: 1.08; letter-spacing: -0.01em; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+.wrap {
+  width: 100%;
+  max-width: 1240px;
+  margin-inline: auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ---------- Cabecera y portada ---------- */
+.hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--line); }
+.aura-field { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+.blob { position: absolute; border-radius: 50%; filter: blur(70px); opacity: 0.9; }
+.blob.a { width: 46vmax; height: 46vmax; max-width: 620px; max-height: 620px; right: -6%; top: -10%; background: radial-gradient(circle, color-mix(in srgb, var(--aura-a) var(--aura-alpha), transparent), transparent 68%); animation: drift 18s ease-in-out infinite alternate; }
+.blob.b { width: 38vmax; height: 38vmax; max-width: 520px; max-height: 520px; right: 22%; bottom: -24%; background: radial-gradient(circle, color-mix(in srgb, var(--aura-b) var(--aura-alpha), transparent), transparent 68%); animation: drift 22s ease-in-out infinite alternate-reverse; }
+.blob.c { width: 30vmax; height: 30vmax; max-width: 420px; max-height: 420px; left: -8%; bottom: -30%; background: radial-gradient(circle, color-mix(in srgb, var(--aura-c) var(--aura-alpha), transparent), transparent 68%); animation: drift 26s ease-in-out infinite alternate; }
+@keyframes drift { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(-4%, 5%, 0) scale(1.08); } }
+
+.topbar { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-block: 22px; }
+.brand { font-family: var(--display); font-weight: 600; font-size: 22px; letter-spacing: 0.22em; text-decoration: none; }
+.nav { display: flex; gap: 22px; flex-wrap: wrap; font-size: 14px; }
+.nav a { text-decoration: none; color: var(--muted); padding-block: 4px; border-bottom: 1px solid transparent; transition: color .2s, border-color .2s; }
+.nav a:hover { color: var(--fg); border-color: var(--fg); }
+
+.hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 32px; align-items: center; padding-block: 40px 64px; }
+.hero-copy { min-width: 0; display: flex; flex-direction: column; gap: 22px; align-items: flex-start; }
+.hero h1 { font-size: clamp(2.5rem, 6.2vw, 4.9rem); }
+.hero h1 em { font-style: italic; color: var(--accent); }
+.hero p.lead { max-width: 52ch; color: var(--muted); font-size: 17px; }
+.cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font-family: var(--body); font-weight: 600; font-size: 14.5px; letter-spacing: 0.01em;
+  padding: 12px 20px; border-radius: 3px; text-decoration: none; cursor: pointer;
+  border: 1px solid var(--accent); background: var(--accent); color: var(--accent-fg);
+  transition: transform .2s, background .2s, color .2s;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn.ghost { background: transparent; color: var(--fg); border-color: var(--line); }
+.btn.ghost:hover { border-color: var(--fg); }
+.spec-line { display: flex; flex-wrap: wrap; gap: 8px 20px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; color: var(--muted); padding-top: 6px; }
+.spec-line span { display: inline-flex; align-items: center; gap: 8px; }
+.spec-line span::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+.countdown { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; padding: 7px 12px; border: 1px solid var(--line); border-radius: 999px; color: var(--fg); background: color-mix(in srgb, var(--surface) 70%, transparent); }
+.countdown[hidden] { display: none; }
+
+.hero-figure { position: relative; min-width: 0; display: grid; place-items: center; --c: #8fa58b; --ink: #1b1920; }
+.hero-figure svg { width: min(100%, 380px); height: auto; position: relative; z-index: 1; filter: drop-shadow(0 28px 36px rgba(0,0,0,.28)); animation: float 7s ease-in-out infinite; }
+.hero-figure::before { content: ""; position: absolute; width: 90%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--c) 60%, transparent), transparent 66%); filter: blur(30px); }
+@keyframes float { 0%, 100% { transform: translateY(0) rotate(-1.5deg); } 50% { transform: translateY(-12px) rotate(1.5deg); } }
+.hero-figure figcaption { position: relative; z-index: 1; margin-top: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+
+/* ---------- Secciones ---------- */
+section { padding-block: 72px; }
+.section-head { display: flex; flex-direction: column; gap: 12px; margin-bottom: 36px; max-width: 60ch; }
+.section-head h2 { font-size: clamp(1.9rem, 4vw, 3rem); }
+.section-head p { color: var(--muted); }
+
+.grid { display: grid; grid-template-columns: 1fr; gap: 18px; }
+@media (min-width: 560px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1180px) { .grid { grid-template-columns: repeat(5, 1fr); gap: 16px; } }
+
+.card { --c: #8fa58b; --ink: #1b1920; display: flex; flex-direction: column; min-width: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 4px; overflow: hidden; transition: border-color .25s, transform .25s; }
+.card:hover { border-color: color-mix(in srgb, var(--c) 70%, var(--line)); }
+.fig { position: relative; aspect-ratio: 1 / 1; background: var(--surface-2); display: grid; place-items: center; overflow: hidden; }
+.fig::before { content: ""; position: absolute; inset: 8%; border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--c) 58%, transparent), transparent 68%); filter: blur(14px); opacity: .75; transition: opacity .3s, transform .4s; }
+.card:hover .fig::before { opacity: 1; transform: scale(1.12); }
+.fig svg { position: relative; width: 74%; height: auto; transition: transform .35s; filter: drop-shadow(0 12px 14px rgba(0,0,0,.25)); }
+.card:hover .fig svg { transform: translateY(-4px); }
+.body { display: flex; flex-direction: column; gap: 10px; padding: 16px; flex: 1; min-width: 0; }
+.card h3 { font-family: var(--display); font-weight: 500; font-size: 20px; line-height: 1.2; }
+.card .desc { font-size: 14px; color: var(--muted); flex: 1; }
+.card .tech { font-family: var(--mono); font-size: 11px; letter-spacing: .04em; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 10px; }
+.swatches { display: flex; gap: 8px; flex-wrap: wrap; }
+.sw { width: 22px; height: 22px; border-radius: 50%; border: 2px solid transparent; padding: 0; cursor: pointer; background: var(--sw); box-shadow: inset 0 0 0 1px rgba(0,0,0,.25); transition: transform .15s; }
+.sw:hover { transform: scale(1.12); }
+.sw[aria-pressed="true"] { border-color: var(--fg); }
+.buy { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.price { font-family: var(--mono); font-size: 15px; font-weight: 500; }
+.buy .btn { padding: 9px 14px; font-size: 13.5px; }
+.color-name { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+
+svg .c { fill: var(--c); }
+svg .d { fill: #000; fill-opacity: .22; }
+svg .l { fill: #fff; fill-opacity: .2; }
+svg .cs { fill: none; stroke: var(--c); }
+a.countdown { text-decoration: none; transition: border-color .2s; }
+a.countdown:hover { border-color: var(--fg); }
+.season { border-top: 1px solid var(--line); background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--aura-a) 14%, transparent) 55%, transparent); }
+@media (min-width: 1180px) { .grid.g3 { grid-template-columns: repeat(3, 1fr); gap: 18px; } }
+svg .ink { fill: var(--ink); font-family: var(--display); font-style: italic; font-weight: 600; }
+
+.note { margin-top: 22px; font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing: .04em; }
+
+/* ---------- Personaliza ---------- */
+.custom { background: var(--surface); border-block: 1px solid var(--line); }
+.custom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+.form { display: flex; flex-direction: column; gap: 22px; min-width: 0; }
+.field { display: flex; flex-direction: column; gap: 8px; }
+.field label, .field .lbl { font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.field input { font-family: var(--display); font-style: italic; font-size: 28px; padding: 10px 14px; background: var(--bg); color: var(--fg); border: 1px solid var(--line); border-radius: 3px; width: 100%; }
+.field input:focus { outline: 2px solid var(--accent); outline-offset: 2px; border-color: var(--accent); }
+.field .swatches .sw { width: 30px; height: 30px; }
+.preview { position: relative; display: grid; place-items: center; min-width: 0; --c: #8fa58b; --ink: #1b1920; padding-block: 12px; }
+.preview::before { content: ""; position: absolute; width: 85%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--c) 55%, transparent), transparent 66%); filter: blur(28px); }
+.preview svg { position: relative; width: min(100%, 340px); height: auto; filter: drop-shadow(0 24px 30px rgba(0,0,0,.28)); }
+
+/* ---------- Cómo pedir ---------- */
+.steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; counter-reset: step; }
+.steps li { counter-increment: step; padding: 8px 28px 8px 0; display: flex; flex-direction: column; gap: 8px; min-width: 0; border-top: 1px solid var(--line); padding-top: 20px; margin-right: 28px; }
+.steps li:last-child { margin-right: 0; }
+.steps li::before { content: counter(step); font-family: var(--display); font-style: italic; font-size: 44px; line-height: 1; color: var(--accent); }
+.steps h3 { font-family: var(--body); font-weight: 600; font-size: 17px; }
+.steps p { color: var(--muted); font-size: 15px; }
+
+/* ---------- Pie ---------- */
+footer { border-top: 1px solid var(--line); padding-block: 40px 48px; }
+.foot { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; align-items: flex-start; }
+.foot .brand { font-size: 18px; }
+.foot p { color: var(--muted); font-size: 14px; max-width: 46ch; }
+.foot .small { font-family: var(--mono); font-size: 12px; letter-spacing: .04em; }
+
+@media (max-width: 860px) {
+  .hero-grid { grid-template-columns: 1fr; padding-block: 24px 48px; }
+  .hero-figure { order: -1; }
+  .hero-figure svg { width: min(70%, 280px); }
+  .custom-grid { grid-template-columns: 1fr; gap: 28px; }
+  .steps { grid-template-columns: 1fr; gap: 20px; }
+  .steps li { margin-right: 0; padding-right: 0; }
+  section { padding-block: 52px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .blob, .hero-figure svg { animation: none; }
+  .card, .fig::before, .fig svg, .btn, .sw { transition: none; }
+}
+</style>
+
+<header class="hero">
+  <div class="aura-field" aria-hidden="true"><div class="blob a"></div><div class="blob b"></div><div class="blob c"></div></div>
+  <div class="wrap">
+    <div class="topbar">
+      <a class="brand" href="#inicio" id="inicio">BANEPRINT</a>
+      <nav class="nav" aria-label="Secciones">
+        <a href="#catalogo">Catálogo</a>
+        <a href="#navidad">Navidad</a>
+        <a href="#personaliza">Personaliza</a>
+        <a href="#como-pedir">Cómo pedir</a>
+      </nav>
+    </div>
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <a class="countdown" id="countdown" href="#navidad">Temporada de Navidad abierta</a>
+        <h1>Piezas únicas, impresas <em>capa por capa</em></h1>
+        <p class="lead">Objetos útiles y decorativos en PLA mate, con acabados suaves y colores que se sienten bien en casa. Elige el color, personalízalo y lo imprimimos para ti.</p>
+        <div class="cta-row">
+          <a class="btn" href="#catalogo">Ver catálogo</a>
+          <a class="btn ghost" href="#navidad">Colección de Navidad</a>
+        </div>
+        <div class="spec-line"><span>PLA mate</span><span>Capas de 0.12 a 0.20 mm</span><span>Nombre y color a tu medida</span></div>
+      </div>
+      <figure class="hero-figure" id="heroFig" style="margin:0">
+        <div id="heroSphere"></div>
+        <figcaption>Maceta geométrica · Salvia</figcaption>
+      </figure>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section id="catalogo">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Catálogo</span>
+        <h2>Objetos para tu casa y tu escritorio</h2>
+        <p>Piezas de uso diario que se imprimen en el color que elijas. Toca un color para verlo y pide por WhatsApp con tu elección ya escrita.</p>
+      </div>
+      <div class="grid g3" id="gridG"></div>
+      <p class="note">Tiempos de impresión aproximados, por pieza.</p>
+    </div>
+  </section>
+
+  <section id="navidad" class="season">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Temporada · Navidad 2026</span>
+        <h2>Colección navideña: diez piezas para regalar y decorar</h2>
+        <p>Adornos, regalos personalizados y detalles para la mesa. Se imprimen por pedido, así que mientras antes escribas, mejor.</p>
+      </div>
+      <div class="grid" id="grid"></div>
+      <p class="note">Tiempos de impresión aproximados, por pieza.</p>
+    </div>
+  </section>
+
+  <section id="personaliza" class="custom">
+    <div class="wrap custom-grid">
+      <div class="form">
+        <div class="section-head" style="margin:0">
+          <span class="eyebrow">Navidad · hecho a tu nombre</span>
+          <h2>Tu nombre en una esfera</h2>
+          <p>Escribe el nombre, elige el color y mira cómo queda antes de pedirla.</p>
+        </div>
+        <div class="field">
+          <label for="nameInput">Nombre o texto (hasta 10 letras)</label>
+          <input id="nameInput" type="text" maxlength="10" value="Sofía" autocomplete="off" spellcheck="false">
+        </div>
+        <div class="field">
+          <span class="lbl">Color · <span id="customColorName">Salvia</span></span>
+          <div class="swatches" id="customSwatches"></div>
+        </div>
+        <div><a class="btn" id="customBuy" href="#" target="_blank" rel="noopener">Pedir esta esfera por WhatsApp</a></div>
+      </div>
+      <div class="preview" id="preview"><div id="previewSphere"></div></div>
+    </div>
+  </section>
+
+  <section id="como-pedir">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Cómo pedir</span>
+        <h2>Tres pasos, sin carrito</h2>
+      </div>
+      <ol class="steps">
+        <li><h3>Elige pieza y color</h3><p>Revisa la colección, toca el color que quieres y presiona el botón de pedido.</p></li>
+        <li><h3>Confirma por WhatsApp</h3><p>El mensaje ya sale escrito. Ahí confirmamos el nombre, la foto si es litofanía y el precio final.</p></li>
+        <li><h3>Imprimimos y coordinamos</h3><p>Imprimimos tu pieza y acordamos contigo la entrega antes de Navidad.</p></li>
+      </ol>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <span class="brand">BANEPRINT</span>
+      <p>Impresión 3D para regalar y decorar. Cada pieza se imprime en PLA mate.</p>
+    </div>
+    <div class="small" style="color:var(--muted);display:flex;flex-direction:column;gap:6px">
+      <span id="deadline">Pedidos de Navidad hasta el 15 de diciembre</span>
+      <span id="waShow" hidden></span>
+      <span>BANEPRINT · Navidad 2026</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ===== Configuración editable ===== */
+var WA_NUMBER = "";            /* Número de WhatsApp con código de país, solo dígitos. Ejemplo: 502XXXXXXXX */
+var DEADLINE_TEXT = "Pedidos de Navidad hasta el 15 de diciembre";
+
+var SW = {
+  salvia:    { n: "Salvia",    h: "#8fa58b", ink: "#1b1920" },
+  terracota: { n: "Terracota", h: "#b8735a", ink: "#fbf6ee" },
+  ciruela:   { n: "Ciruela",   h: "#7d5a72", ink: "#f4efe6" },
+  hueso:     { n: "Hueso",     h: "#d9d0c0", ink: "#1b1920" },
+  pizarra:   { n: "Pizarra",   h: "#5f7388", ink: "#f4efe6" },
+  ocre:      { n: "Ocre",      h: "#c19a56", ink: "#1b1920" }
+};
+
+function waLink(msg) {
+  var base = "https://wa.me/" + (WA_NUMBER || "");
+  return base + "?text=" + encodeURIComponent(msg);
+}
+
+function sphereSVG(id, text, big) {
+  var lines = "";
+  for (var y = 36; y <= 112; y += 5) lines += '<line x1="18" x2="102" y1="' + y + '" y2="' + y + '"/>';
+  var len = Math.max(text.length, 1);
+  var fs = Math.max(9, Math.min(big ? 19 : 17, 140 / len));
+  return '<svg viewBox="0 0 120 130" role="img" aria-label="Esfera navideña impresa en 3D">' +
+    '<defs><clipPath id="cp-' + id + '"><circle cx="60" cy="74" r="40"/></clipPath></defs>' +
+    '<circle cx="60" cy="9" r="5" fill="none" stroke="#b79c62" stroke-width="2"/>' +
+    '<rect x="52" y="14" width="16" height="12" rx="2.5" fill="#b79c62"/>' +
+    '<circle cx="60" cy="74" r="40" class="c"/>' +
+    '<g clip-path="url(#cp-' + id + ')" stroke="#000" stroke-opacity=".12" stroke-width="1">' + lines + '</g>' +
+    '<ellipse cx="44" cy="56" rx="10" ry="17" fill="#fff" fill-opacity=".13" transform="rotate(-28 44 56)"/>' +
+    '<circle cx="60" cy="74" r="40" fill="none" stroke="#000" stroke-opacity=".18"/>' +
+    '<text class="ink" x="60" y="' + (74 + fs * 0.3) + '" text-anchor="middle" font-size="' + fs + '">' + text.replace(/&/g, "&amp;").replace(/</g, "&lt;") + '</text></svg>';
+}
+
+var P = [
+  { id: "esfera", name: "Esfera con nombre", desc: "Para el árbol, con tu nombre grabado en relieve y argolla dorada.", tech: "PLA mate · 0.16 mm · ≈ 2 h 10 min", price: 45, colors: ["salvia", "terracota", "ciruela", "hueso"],
+    svg: function () { return sphereSVG("card", "Ana", false); } },
+  { id: "litofania", name: "Lámpara litofanía", desc: "Tu foto en relieve que aparece al encender la luz de la base.", tech: "PLA blanco + base · 0.12 mm · ≈ 9 h", price: 185, colors: ["hueso", "ocre", "pizarra"],
+    svg: function () { return '<svg viewBox="0 0 120 120" role="img" aria-label="Lámpara litofanía"><rect x="26" y="94" width="68" height="10" rx="3" class="c"/><rect x="26" y="94" width="68" height="10" rx="3" class="d"/><rect x="30" y="20" width="60" height="76" rx="4" fill="#f3e6c8"/><circle cx="72" cy="42" r="8" fill="#e9c98a"/><path d="M30 96V74l16-18 14 14 12-10 18 16v20z" class="c"/><path d="M30 96V82l22-16 16 12 22-8v26z" class="d"/><rect x="30" y="20" width="60" height="76" rx="4" fill="none" stroke="#000" stroke-opacity=".25"/></svg>'; } },
+  { id: "arbol", name: "Árbol de escritorio", desc: "Tres niveles en capas que se arman sin pegamento.", tech: "PLA mate · 0.20 mm · ≈ 5 h 30 min", price: 95, colors: ["salvia", "pizarra", "ciruela"],
+    svg: function () { return '<svg viewBox="0 0 120 120" role="img" aria-label="Árbol de Navidad de escritorio"><rect x="54" y="98" width="12" height="10" fill="#7a5d45"/><polygon points="60,52 22,98 98,98" class="c"/><polygon points="60,52 22,98 98,98" class="d"/><polygon points="60,32 30,72 90,72" class="c"/><polygon points="60,14 38,50 82,50" class="c"/><polygon points="60,14 38,50 82,50" class="l"/><circle cx="60" cy="12" r="4" fill="#e9c98a"/></svg>'; } },
+  { id: "estrella", name: "Estrella facetada", desc: "Cinco puntas con facetas que juegan con la luz de una vela LED.", tech: "PLA mate · 0.16 mm · ≈ 3 h", price: 65, colors: ["ocre", "hueso", "terracota"],
+    svg: function () { return '<svg viewBox="0 0 120 120" role="img" aria-label="Estrella navideña"><polygon points="60,20 70.6,47.4 99.9,49 77.1,67.6 84.7,96 60,80 35.3,96 42.9,67.6 20.1,49 49.4,47.4" class="c"/><polygon points="60,62 60,20 70.6,47.4" class="l"/><polygon points="60,62 99.9,49 77.1,67.6" class="d"/><polygon points="60,62 84.7,96 60,80" class="l"/><polygon points="60,62 35.3,96 42.9,67.6" class="d"/><polygon points="60,62 20.1,49 49.4,47.4" class="l"/></svg>'; } },
+  { id: "nacimiento", name: "Nacimiento minimalista", desc: "Establo, tres figuras y estrella en líneas limpias.", tech: "PLA mate · 0.16 mm · ≈ 11 h", price: 165, colors: ["hueso", "salvia", "terracota"],
+    svg: function () { return '<svg viewBox="0 0 120 120" role="img" aria-label="Nacimiento minimalista"><rect x="14" y="96" width="92" height="8" rx="2" class="c"/><rect x="14" y="96" width="92" height="8" rx="2" class="d"/><rect x="26" y="50" width="6" height="46" class="c"/><rect x="88" y="50" width="6" height="46" class="c"/><polygon points="16,50 60,24 104,50" class="c"/><polygon points="16,50 60,24 60,50" class="l"/><circle cx="60" cy="14" r="4" fill="#e9c98a"/><rect x="42" y="76" width="9" height="20" rx="4.5" fill="#e6dccb"/><circle cx="46.5" cy="71" r="5" fill="#e6dccb"/><rect x="68" y="79" width="10" height="17" rx="5" fill="#e6dccb"/><circle cx="73" cy="74" r="5" fill="#e6dccb"/><rect x="54" y="90" width="12" height="6" rx="2" fill="#b79c62"/></svg>'; } },
+  { id: "adviento", name: "Calendario de adviento", desc: "Caja con 24 casillas numeradas para rellenar con detalles.", tech: "PLA mate · 0.20 mm · ≈ 14 h", price: 145, colors: ["ciruela", "salvia", "pizarra"],
+    svg: function () { return '<svg viewBox="0 0 120 120" role="img" aria-label="Calendario de adviento"><defs><pattern id="doors" width="12" height="16" patternUnits="userSpaceOnUse" x="24" y="28"><rect x="1" y="1" width="10" height="14" rx="1.5" fill="#fff" fill-opacity=".28"/></pattern></defs><rect x="18" y="20" width="84" height="82" rx="4" class="c"/><rect x="18" y="20" width="84" height="6" class="d"/><rect x="24" y="28" width="72" height="64" fill="url(#doors)"/></svg>'; } },
+  { id: "llavero", name: "Llavero con nombre", desc: "Pequeño, resistente y listo para entregar como detalle.", tech: "PLA mate · 0.16 mm · ≈ 35 min", price: 25, colors: ["terracota", "salvia", "hueso", "pizarra"],
+    svg: function () { return '<svg viewBox="0 0 120 120" role="img" aria-label="Llavero con nombre"><circle cx="30" cy="60" r="14" fill="none" stroke="#b79c62" stroke-width="3"/><rect x="38" y="44" width="62" height="32" rx="16" class="c"/><rect x="38" y="44" width="62" height="32" rx="16" class="l"/><circle cx="52" cy="60" r="4" fill="#000" fill-opacity=".45"/><text class="ink" x="78" y="65" text-anchor="middle" font-size="15">Ana</text></svg>'; } },
+  { id: "portavelas", name: "Portavelas geométrico", desc: "Calado en rombos para velas LED con luz cálida.", tech: "PLA mate · 0.16 mm · ≈ 3 h 40 min", price: 55, colors: ["ocre", "ciruela", "hueso"],
+    svg: function () { return '<svg viewBox="0 0 120 120" role="img" aria-label="Portavelas geométrico"><path d="M60 16c5 7 7 13 0 19c-7-6-5-12 0-19z" fill="#f3b867"/><rect x="57" y="36" width="6" height="14" fill="#e6dccb"/><polygon points="34,50 86,50 78,104 42,104" class="c"/><polygon points="34,50 86,50 82,60 38,60" class="l"/><polygon points="60,68 69,80 60,92 51,80" fill="#f6d99a" fill-opacity=".9"/></svg>'; } },
+  { id: "posavasos", name: "Set de 4 posavasos", desc: "Anillos concéntricos en relieve, con base antideslizante.", tech: "PLA mate · 0.20 mm · ≈ 4 h", price: 70, colors: ["pizarra", "salvia", "terracota"],
+    svg: function () { return '<svg viewBox="0 0 120 120" role="img" aria-label="Set de posavasos"><rect x="22" y="40" width="56" height="56" rx="14" class="c"/><rect x="22" y="40" width="56" height="56" rx="14" class="d"/><rect x="42" y="24" width="56" height="56" rx="14" class="c"/><circle cx="70" cy="52" r="19" fill="none" stroke="#fff" stroke-opacity=".3" stroke-width="2"/><circle cx="70" cy="52" r="11" fill="none" stroke="#fff" stroke-opacity=".3" stroke-width="2"/><circle cx="70" cy="52" r="4" class="l"/></svg>'; } },
+  { id: "portarretrato", name: "Portarretrato navideño", desc: "Marco para foto 4×6 pulgadas con ramita de acebo.", tech: "PLA mate · 0.16 mm · ≈ 4 h 15 min", price: 85, colors: ["ciruela", "hueso", "ocre"],
+    svg: function () { return '<svg viewBox="0 0 120 120" role="img" aria-label="Portarretrato navideño"><rect x="24" y="22" width="72" height="80" rx="6" class="c"/><rect x="24" y="22" width="72" height="80" rx="6" class="d"/><rect x="36" y="34" width="48" height="56" rx="2" fill="#f3e6c8" fill-opacity=".92"/><path d="M36 90V72l14-14 10 10 8-6 16 14v14z" class="c"/><circle cx="72" cy="46" r="5" fill="#e9c98a"/><path d="M84 24c6-6 14-4 14 2c-6 2-10 2-14-2z" fill="#6f8a6a"/><path d="M88 30c-2-8 4-12 8-8c-2 6-4 8-8 8z" fill="#6f8a6a"/><circle cx="90" cy="28" r="3" fill="#b8735a"/><circle cx="95" cy="31" r="3" fill="#b8735a"/></svg>'; } }
+];
+
+var G = [
+  { id: "soporte", name: "Soporte de celular", desc: "Ángulo cómodo para videollamadas, recetas o escritorio. Cabe con funda.", tech: "PLA mate · 0.20 mm · ≈ 1 h 30 min", price: 35, colors: ["salvia", "pizarra", "terracota", "hueso"],
+    svg: function () { return '<svg viewBox="0 0 120 120" role="img" aria-label="Soporte de celular"><path d="M22 100h62l-6-14H34z" class="c"/><path d="M22 100h62l-6-14H34z" class="d"/><g transform="rotate(12 62 56)"><rect x="42" y="22" width="38" height="66" rx="7" fill="#1d1b22"/><rect x="46" y="28" width="30" height="50" rx="3" fill="#f3e6c8" fill-opacity=".9"/></g><rect x="40" y="84" width="40" height="8" rx="3" class="c"/></svg>'; } },
+  { id: "organizador", name: "Organizador de escritorio", desc: "Tres compartimentos para lápices, notas y cables.", tech: "PLA mate · 0.20 mm · ≈ 6 h", price: 75, colors: ["pizarra", "ciruela", "salvia"],
+    svg: function () { return '<svg viewBox="0 0 120 120" role="img" aria-label="Organizador de escritorio"><path d="M28 52l-3-16M36 52l3-20M90 62l4-18" stroke="#e6dccb" stroke-width="3" stroke-linecap="round"/><rect x="18" y="52" width="30" height="46" rx="3" class="c"/><rect x="18" y="52" width="30" height="8" rx="3" class="l"/><rect x="52" y="30" width="24" height="68" rx="3" class="c"/><rect x="52" y="30" width="24" height="68" rx="3" class="d"/><rect x="52" y="30" width="24" height="8" rx="3" class="l"/><rect x="80" y="62" width="22" height="36" rx="3" class="c"/><rect x="80" y="62" width="22" height="8" rx="3" class="l"/></svg>'; } },
+  { id: "maceta", name: "Maceta geométrica", desc: "Facetas marcadas y agujero de drenaje. Ideal para suculentas.", tech: "PLA mate · 0.20 mm · ≈ 4 h", price: 55, colors: ["salvia", "terracota", "hueso", "ocre"],
+    svg: function () { return '<svg viewBox="0 0 120 120" role="img" aria-label="Maceta geométrica"><path d="M60 54C50 40 40 30 44 14c14 4 20 20 16 40z" fill="#6f8a6a"/><path d="M60 54C70 38 80 30 78 12c-14 6-20 22-18 42z" fill="#6f8a6a" fill-opacity=".85"/><polygon points="32,60 88,60 80,104 40,104" class="c"/><polygon points="32,60 60,60 60,104 40,104" class="d"/><polygon points="60,60 88,60 80,104 60,104" class="l"/><rect x="28" y="54" width="64" height="10" rx="2" class="c"/><rect x="28" y="54" width="64" height="10" rx="2" class="l"/></svg>'; } },
+  { id: "colgadores", name: "Colgadores de pared", desc: "Barra con tres ganchos para llaves, gorras o bolsos.", tech: "PLA mate · 0.20 mm · ≈ 2 h 20 min", price: 40, colors: ["hueso", "pizarra", "terracota"],
+    svg: function () { return '<svg viewBox="0 0 120 120" role="img" aria-label="Colgadores de pared"><rect x="18" y="36" width="84" height="14" rx="3" class="c"/><rect x="18" y="36" width="84" height="14" rx="3" class="l"/><circle cx="28" cy="43" r="2.5" fill="#000" fill-opacity=".4"/><circle cx="92" cy="43" r="2.5" fill="#000" fill-opacity=".4"/><path d="M38 50v28q0 12 12 12M60 50v34q0 12 12 12M82 50v28q0 12 12 12" class="cs" stroke-width="7" stroke-linecap="round"/></svg>'; } },
+  { id: "audifonos", name: "Soporte para audífonos", desc: "Base estable que mantiene tus audífonos a la vista.", tech: "PLA mate · 0.16 mm · ≈ 3 h 10 min", price: 60, colors: ["ciruela", "salvia", "ocre"],
+    svg: function () { return '<svg viewBox="0 0 120 120" role="img" aria-label="Soporte para audífonos"><rect x="28" y="98" width="64" height="8" rx="3" class="c"/><rect x="28" y="98" width="64" height="8" rx="3" class="d"/><rect x="54" y="34" width="12" height="64" class="c"/><path d="M34 50q26-34 52 0" class="cs" stroke-width="12" stroke-linecap="round"/><path d="M34 50q26-34 52 0" fill="none" stroke="#fff" stroke-opacity=".18" stroke-width="4" stroke-linecap="round"/></svg>'; } },
+  { id: "serpiente", name: "Serpiente articulada", desc: "Se imprime ya armada y se mueve como una real.", tech: "PLA mate · 0.16 mm · ≈ 7 h", price: 85, colors: ["salvia", "ocre", "ciruela", "pizarra"],
+    svg: function () { return '<svg viewBox="0 0 120 120" role="img" aria-label="Serpiente articulada"><g class="c" stroke="#000" stroke-opacity=".18"><circle cx="20" cy="86" r="7"/><circle cx="32" cy="76" r="9"/><circle cx="47" cy="68" r="11"/><circle cx="64" cy="64" r="12"/><circle cx="81" cy="66" r="12"/><circle cx="95" cy="74" r="10"/><circle cx="104" cy="88" r="9"/></g><g class="l"><circle cx="32" cy="76" r="9"/><circle cx="64" cy="64" r="12"/><circle cx="95" cy="74" r="10"/></g><circle cx="107" cy="85" r="1.8" fill="#000"/></svg>'; } }
+];
+
+function msgFor(name, colorKey) {
+  return "Hola BANEPRINT, quiero pedir: " + name + " en color " + SW[colorKey].n + ". ¿Está disponible?";
+}
+
+function cardHTML(p) {
+  var first = p.colors[0];
+  var sw = p.colors.map(function (k, i) {
+    return '<button type="button" class="sw" style="--sw:' + SW[k].h + '" data-color="' + k + '" aria-label="Color ' + SW[k].n + '" aria-pressed="' + (i === 0) + '"></button>';
+  }).join("");
+  return '<article class="card" data-id="' + p.id + '" data-color="' + first + '" style="--c:' + SW[first].h + ';--ink:' + SW[first].ink + '">' +
+    '<div class="fig">' + p.svg() + '</div>' +
+    '<div class="body"><h3>' + p.name + '</h3><p class="desc">' + p.desc + '</p>' +
+    '<div class="swatches" role="group" aria-label="Colores de ' + p.name + '">' + sw + '</div>' +
+    '<span class="color-name">' + SW[first].n + '</span>' +
+    '<p class="tech">' + p.tech + '</p>' +
+    '<div class="buy"><span class="price">Q' + p.price + '</span><a class="btn buylink" target="_blank" rel="noopener" href="' + waLink(msgFor(p.name, first)) + '">Pedir</a></div>' +
+    '</div></article>';
+}
+
+var ALL = P.concat(G);
+var grid = document.getElementById("grid");
+grid.innerHTML = P.map(cardHTML).join("");
+var gridG = document.getElementById("gridG");
+gridG.innerHTML = G.map(cardHTML).join("");
+
+function onSwatch(e) {
+  var b = e.target.closest(".sw");
+  if (!b) return;
+  var card = b.closest(".card");
+  var k = b.getAttribute("data-color");
+  var p = ALL.filter(function (x) { return x.id === card.getAttribute("data-id"); })[0];
+  card.style.setProperty("--c", SW[k].h);
+  card.style.setProperty("--ink", SW[k].ink);
+  card.setAttribute("data-color", k);
+  card.querySelectorAll(".sw").forEach(function (s) { s.setAttribute("aria-pressed", String(s === b)); });
+  card.querySelector(".color-name").textContent = SW[k].n;
+  card.querySelector(".buylink").href = waLink(msgFor(p.name, k));
+}
+grid.addEventListener("click", onSwatch);
+gridG.addEventListener("click", onSwatch);
+
+/* Figura de portada */
+document.getElementById("heroSphere").innerHTML = G[2].svg();
+
+/* Personalizador */
+var cur = "salvia";
+var preview = document.getElementById("preview");
+var pv = document.getElementById("previewSphere");
+var input = document.getElementById("nameInput");
+var csw = document.getElementById("customSwatches");
+var cbuy = document.getElementById("customBuy");
+csw.innerHTML = Object.keys(SW).map(function (k) {
+  return '<button type="button" class="sw" style="--sw:' + SW[k].h + '" data-color="' + k + '" aria-label="Color ' + SW[k].n + '" aria-pressed="' + (k === cur) + '"></button>';
+}).join("");
+
+function renderCustom() {
+  var t = input.value.trim() || "Tu nombre";
+  preview.style.setProperty("--c", SW[cur].h);
+  preview.style.setProperty("--ink", SW[cur].ink);
+  pv.innerHTML = sphereSVG("prev", t, true);
+  document.getElementById("customColorName").textContent = SW[cur].n;
+  csw.querySelectorAll(".sw").forEach(function (s) { s.setAttribute("aria-pressed", String(s.getAttribute("data-color") === cur)); });
+  cbuy.href = waLink("Hola BANEPRINT, quiero una esfera con el nombre \"" + t + "\" en color " + SW[cur].n + ". ¿Está disponible?");
+}
+input.addEventListener("input", renderCustom);
+csw.addEventListener("click", function (e) {
+  var b = e.target.closest(".sw");
+  if (!b) return;
+  cur = b.getAttribute("data-color");
+  renderCustom();
+});
+renderCustom();
+
+/* Cuenta regresiva y datos de contacto */
+(function () {
+  var now = new Date();
+  var xmas = new Date(now.getFullYear(), 11, 24);
+  var days = Math.ceil((xmas - now) / 86400000);
+  var el = document.getElementById("countdown");
+  if (days > 0) el.textContent = "Faltan " + days + (days === 1 ? " día" : " días") + " para Navidad · Ver colección";
+  else el.hidden = true;
+  document.getElementById("deadline").textContent = DEADLINE_TEXT;
+  if (WA_NUMBER) {
+    var w = document.getElementById("waShow");
+    w.textContent = "WhatsApp: +" + WA_NUMBER;
+    w.hidden = false;
+  }
+})();
+</script>
